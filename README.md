@@ -32,11 +32,11 @@ A comprehensive bus reservation system built with Spring Boot, implementing mode
   - Spring Boot 3.x
   - Spring Security
   - Spring Data JPA
-  - H2 Database
+  - MySQL Database
 
 - **Design Patterns**
-  - State Pattern (Booking states)
-  - Factory Pattern (User creation)
+  - State Pattern (Cancellation)
+  - Factory Pattern (Booking)
   - Command Pattern (Bus operations)
   - Facade Pattern (Authentication)
 
@@ -46,20 +46,6 @@ A comprehensive bus reservation system built with Spring Boot, implementing mode
   - SOLID Principles
   - GRASP Patterns
 
-## 📦 Project Structure
-
-```
-src/main/java/com/example/busreservation/
-├── config/           # Configuration classes
-├── controllers/      # REST controllers
-├── dto/             # Data Transfer Objects
-├── factory/         # Factory pattern implementation
-├── models/          # Entity classes
-├── repositories/    # Data access layer
-├── services/        # Business logic
-├── state/           # State pattern implementation
-└── commands/        # Command pattern implementation
-```
 
 ## 🔑 Key Classes
 
@@ -84,22 +70,6 @@ src/main/java/com/example/busreservation/
   - `BusService`
   - `AuthFacade`
 
-## 🎯 Design Principles
-
-### SOLID Principles
-- **Single Responsibility**: Each class has one reason to change
-- **Open/Closed**: Open for extension, closed for modification
-- **Liskov Substitution**: Subtypes can replace their base types
-- **Interface Segregation**: Clients shouldn't depend on unused interfaces
-- **Dependency Inversion**: Depend on abstractions, not concretions
-
-### GRASP Patterns
-- **Information Expert**: Assign responsibilities to classes with the most information
-- **Creator**: Assign creation responsibilities to classes that contain or aggregate
-- **Controller**: Handle system events
-- **Low Coupling**: Minimize dependencies between classes
-- **High Cohesion**: Keep related responsibilities together
-
 ## 🚦 Getting Started
 
 1. **Prerequisites**
@@ -121,15 +91,6 @@ src/main/java/com/example/busreservation/
 
 4. **Accessing the Application**
    - API Base URL: `http://localhost:8080`
-
-
-## 🔒 Security
-
-- Spring Security integration
-- Role-based access control
-- Secure password storage with PasswordEncoder
-- CSRF protection
-- CORS configuration
 
 
 
