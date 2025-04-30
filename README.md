@@ -121,7 +121,7 @@ src/main/java/com/example/busreservation/
 
 4. **Accessing the Application**
    - API Base URL: `http://localhost:8080`
-   - Swagger UI: `http://localhost:8080/swagger-ui.html`
+
 
 ## 🔒 Security
 
@@ -131,22 +131,7 @@ src/main/java/com/example/busreservation/
 - CSRF protection
 - CORS configuration
 
-## 📝 API Documentation
 
-The API documentation is available through Swagger UI at:
-`http://localhost:8080/swagger-ui.html`
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👥 Authors
 
@@ -155,7 +140,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - SHILPA M TALAWAR
 - SPANDANA M POOJARY
 
-## 🙏 Acknowledgments
 
-- Spring Boot Team
-- Open Source Community
