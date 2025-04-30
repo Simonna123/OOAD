@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/admin/home" class="nav-brand">🚌 Bus Reservation Admin</a>
+            <div class="nav-links">
+                <a href="/admin/dashboard" class="nav-link">
+                    <span class="material-symbols-outlined">dashboard</span> Dashboard
+                </a>
+                <a href="/admin/bookings" class="nav-link">
+                    <span class="material-symbols-outlined">confirmation_number</span> Bookings
+                </a>
+                <form action="/logout" method="get" class="nav-link">
+                    <button class="btn btn-outline" type="submit">
+                        <span class="material-symbols-outlined">logout</span> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header fade-in">
+            <h1>User Management</h1>
+            <p>View and manage system users</p>
+        </header>
+
+        <div class="search-container slide-up">
+            <div class="input-group">
+                <span class="material-symbols-outlined">search</span>
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by username...">
+            </div>
+        </div>
+
+        <div class="card slide-up">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${users}" class="user-row"
+                            th:attr="data-username=${user.username}">
+                            <td>
+                                <span class="user-id" th:text="${'#' + user.id}">1</span>
+                            </td>
+                            <td>
+                                <div class="user-info">
+                                    <span class="material-symbols-outlined">person</span>
+                                    <span th:text="${user.username}">john_doe</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge" 
+                                      th:classappend="${user.admin ? 'badge-primary' : 'badge-info'}"
+                                      th:text="${user.admin ? 'Admin' : 'Passenger'}">
+                                    Role
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge badge-success">Active</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="#" class="btn btn-icon btn-warning" title="View Details">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                    </a>
+                                    <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" 
+                                          method="post" 
+                                          style="display:inline;"
+                                          onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
+                                        <button type="submit" class="btn btn-icon btn-danger" title="Delete User">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="noResults" class="empty-state" style="display: none;">
+            <span class="material-symbols-outlined">search_off</span>
+            <p>No users found matching your search</p>
+        </div>
+
+        <div th:if="${param.success}" class="alert alert-success slide-up">
+            <span class="material-symbols-outlined">check_circle</span>
+            <span th:text="${param.success}">Success message</span>
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger slide-up">
+            <span class="material-symbols-outlined">error</span>
+            <span th:text="${param.error}">Error message</span>
+        </div>
+    </div>
+
+    <style>
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-light);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            max-width: 400px;
+        }
+
+        .input-group .material-symbols-outlined {
+            color: var(--text-light);
+        }
+
+        .input-group .form-control {
+            border: none;
+            background: none;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-id {
+            font-family: monospace;
+            color: var(--text-light);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin: 2rem 0;
+            display: none;
+        }
+
+        .empty-state .material-symbols-outlined {
+            font-size: 3rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+        }
+    </style>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const userRows = document.querySelectorAll('.user-row');
+            let hasResults = false;
+
+            userRows.forEach(row => {
+                const username = row.getAttribute('data-username').toLowerCase();
+
+                if (username.includes(searchTerm)) {
+                    row.style.display = 'table-row';
+                    hasResults = true;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document.getElementById('noResults').style.display = hasResults ? 'none' : 'block';
+        });
+
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.style.display = 'none', 500);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

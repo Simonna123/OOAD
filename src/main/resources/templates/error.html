@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #fce4ec, #f3e5f5);
+            margin: 0;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .error-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #d32f2f;
+            margin-bottom: 20px;
+        }
+
+        .error-message {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(to right, #ba68c8, #9575cd);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(to right, #ab47bc, #7e57c2);
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Oops! Something went wrong</h1>
+        <div class="error-message" th:text="${error}">An error occurred</div>
+        <a th:href="@{/passenger/dashboard}" class="back-btn">Back to Dashboard</a>
+    </div>
+</body>
+</html> 

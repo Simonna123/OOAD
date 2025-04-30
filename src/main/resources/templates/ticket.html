@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            background-color: #f3e5f5;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .ticket-container {
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #6a1b9a;
+            margin-bottom: 20px;
+        }
+
+        .ticket-info {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .ticket-info p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #4a148c;
+        }
+
+        .success-message {
+            color: #2e7d32;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .back-button {
+            margin-top: 30px;
+        }
+
+        .back-button a {
+            background: linear-gradient(135deg, #ab47bc, #7e57c2);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .back-button a:hover {
+            background: linear-gradient(135deg, #8e24aa, #5e35b1);
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-container">
+        <h2>🎟️ Booking Confirmed!</h2>
+        <div class="ticket-info">
+            <p><span class="highlight">Passenger Name:</span> <span th:text="${passengerName}"></span></p>
+            <p><span class="highlight">Email:</span> <span th:text="${email}"></span></p>
+            <p><span class="highlight">Phone:</span> <span th:text="${phone}"></span></p>
+            <p><span class="highlight">Bus Name:</span> <span th:text="${busName}"></span></p>
+            <p><span class="highlight">Seats Booked:</span> <span th:text="${seats}"></span></p>
+        </div>
+        <div class="success-message">
+            Your ticket has been successfully booked. Safe travels! 🚌
+        </div>
+
+        <div class="back-button">
+            <a th:href="@{/passenger/dashboard}">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html>

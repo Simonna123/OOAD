@@ -1,0 +1,349 @@
+<!-- templates/booking_list.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/admin/home" class="nav-brand">🚌 Bus Reservation Admin</a>
+            <div class="nav-links">
+                <a href="/admin/home" class="nav-link">
+                    <span class="material-symbols-outlined">home</span> Home
+                </a>
+                <a href="/admin/users" class="nav-link">
+                    <span class="material-symbols-outlined">group</span> Users
+                </a>
+                <form action="/logout" method="get" class="nav-link">
+                    <button class="btn btn-outline" type="submit">
+                        <span class="material-symbols-outlined">logout</span> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header fade-in">
+            <h1>Booking Management</h1>
+            <p>View and manage all bus bookings</p>
+        </header>
+
+        <div class="filters slide-up">
+            <div class="search-container">
+                <div class="input-group">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search bookings...">
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button class="btn btn-outline active" data-filter="all">
+                    <span class="material-symbols-outlined">list</span>
+                    All
+                </button>
+                <button class="btn btn-outline" data-filter="active">
+                    <span class="material-symbols-outlined">check_circle</span>
+                    Active
+                </button>
+                <button class="btn btn-outline" data-filter="cancelled">
+                    <span class="material-symbols-outlined">cancel</span>
+                    Cancelled
+                </button>
+            </div>
+        </div>
+
+        <div class="card slide-up" th:if="${bookings != null and not #lists.isEmpty(bookings)}">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Bus Details</th>
+                            <th>Passenger Details</th>
+                            <th>Booking Details</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="booking : ${bookings}" class="booking-row"
+                            th:attr="data-status=${booking.status}">
+                            <td>
+                                <span class="booking-id" th:text="${'#' + booking.id}">1</span>
+                            </td>
+                            <td>
+                                <div class="bus-info">
+                                    <div class="bus-name" th:text="${booking.bus.busName}">Bus Name</div>
+                                    <div class="route-info">
+                                        <span th:text="${booking.bus.source}">Source</span>
+                                        <span class="material-symbols-outlined">arrow_forward</span>
+                                        <span th:text="${booking.bus.destination}">Destination</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="passenger-info">
+                                    <div class="user-details">
+                                        <span class="material-symbols-outlined">person</span>
+                                        <span th:text="${booking.user.username}">Username</span>
+                                    </div>
+                                    <div class="passenger-name" th:text="${booking.passengerName}">Passenger Name</div>
+                                    <div class="contact-info">
+                                        <div>
+                                            <span class="material-symbols-outlined">mail</span>
+                                            <span th:text="${booking.passengerEmail}">Email</span>
+                                        </div>
+                                        <div>
+                                            <span class="material-symbols-outlined">phone</span>
+                                            <span th:text="${booking.passengerPhone}">Phone</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="booking-details">
+                                    <div class="seats">
+                                        <span class="material-symbols-outlined">chair</span>
+                                        <span th:text="${booking.seatsBooked + ' seats'}">Seats</span>
+                                    </div>
+                                    <div class="amount">
+                                        <span class="material-symbols-outlined">payments</span>
+                                        <span th:text="${'₹' + booking.totalAmount}">Amount</span>
+                                    </div>
+                                    <div class="booking-time">
+                                        <span class="material-symbols-outlined">schedule</span>
+                                        <span th:text="${#temporals.format(booking.bookingTime, 'dd MMM yyyy HH:mm')}">Time</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge" 
+                                      th:classappend="${booking.status == 'ACTIVE' ? 'badge-success' : 'badge-danger'}"
+                                      th:text="${booking.status}">Status</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-icon btn-warning" title="View Details">
+                                        <span class="material-symbols-outlined">visibility</span>
+                                    </button>
+                                    <button th:if="${booking.status == 'ACTIVE'}" 
+                                            class="btn btn-icon btn-danger" 
+                                            title="Cancel Booking">
+                                        <span class="material-symbols-outlined">cancel</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div th:if="${bookings == null or #lists.isEmpty(bookings)}" class="empty-state slide-up">
+            <span class="material-symbols-outlined">event_busy</span>
+            <p>No bookings found in the system</p>
+            <a href="/admin/home" class="btn btn-primary">
+                <span class="material-symbols-outlined">home</span>
+                Go to Home
+            </a>
+        </div>
+    </div>
+
+    <style>
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-buttons .btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-buttons .btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .booking-id {
+            font-family: monospace;
+            color: var(--text-light);
+        }
+
+        .bus-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .bus-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .route-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .passenger-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .user-details {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .passenger-name {
+            font-weight: 500;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .contact-info > div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .booking-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .booking-details > div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .seats, .amount {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .booking-time {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin: 2rem 0;
+        }
+
+        .empty-state .material-symbols-outlined {
+            font-size: 3rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <script>
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const bookingRows = document.querySelectorAll('.booking-row');
+            let hasResults = false;
+
+            bookingRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = 'table-row';
+                    hasResults = true;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-buttons .btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // Update active state
+                document.querySelectorAll('.filter-buttons .btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                // Filter rows
+                const filter = this.getAttribute('data-filter');
+                const rows = document.querySelectorAll('.booking-row');
+
+                rows.forEach(row => {
+                    if (filter === 'all' || row.getAttribute('data-status').toLowerCase() === filter) {
+                        row.style.display = 'table-row';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.style.display = 'none', 500);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
+

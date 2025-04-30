@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #fce4ec, #f3e5f5);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title {
+            color: #7b1fa2;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .success-message {
+            color: #388e3c;
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .booking-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .booking-details p {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .booking-details p:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .value {
+            color: #666;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            text-align: center;
+            padding: 15px;
+            background: #ffebee;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎉 Booking Confirmed!</h1>
+        </div>
+
+        <div th:if="${error}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div th:if="${message}" class="success-message">
+            <p th:text="${message}"></p>
+        </div>
+
+        <div th:if="${booking != null}" class="booking-details">
+            <p>
+                <span class="label">Booking ID:</span>
+                <span class="value" th:text="${booking.id}"></span>
+            </p>
+            <p>
+                <span class="label">Bus Name:</span>
+                <span class="value" th:text="${booking.bus.busName}"></span>
+            </p>
+            <p>
+                <span class="label">Route:</span>
+                <span class="value" th:text="${booking.bus.source + ' → ' + booking.bus.destination}"></span>
+            </p>
+            <p>
+                <span class="label">Departure:</span>
+                <span class="value" th:text="${#temporals.format(booking.bus.departureTime, 'dd/MM/yyyy HH:mm')}"></span>
+            </p>
+            <p>
+                <span class="label">Passenger Name:</span>
+                <span class="value" th:text="${booking.passengerName}"></span>
+            </p>
+            <p>
+                <span class="label">Email:</span>
+                <span class="value" th:text="${booking.passengerEmail}"></span>
+            </p>
+            <p>
+                <span class="label">Phone:</span>
+                <span class="value" th:text="${booking.passengerPhone}"></span>
+            </p>
+            <p>
+                <span class="label">Seats Booked:</span>
+                <span class="value" th:text="${booking.seatsBooked}"></span>
+            </p>
+            <p>
+                <span class="label">Total Amount:</span>
+                <span class="value">₹<span th:text="${booking.totalAmount}"></span></span>
+            </p>
+            <p>
+                <span class="label">Booking Time:</span>
+                <span class="value" th:text="${#temporals.format(booking.bookingTime, 'dd/MM/yyyy HH:mm')}"></span>
+            </p>
+        </div>
+
+        <div class="buttons">
+            <a href="/passenger/dashboard" class="btn btn-primary">Go to Dashboard</a>
+            <a href="/passenger/view-buses" class="btn btn-secondary">Book Another</a>
+        </div>
+    </div>
+</body>
+</html>

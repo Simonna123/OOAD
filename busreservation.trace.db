@@ -1,0 +1,9 @@
+2025-04-25 00:04:55.662257+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DROP TABLE IF EXISTS [*]user"; expected "identifier"; SQL statement:
+DROP TABLE IF EXISTS user [42001-224]
+2025-04-25 00:05:11.655630+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DROP TABLE IF EXISTS [*]user"; expected "identifier"; SQL statement:
+DROP TABLE IF EXISTS user [42001-224]
+2025-04-25 00:06:09.400768+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INSERT INTO [*]user (username, password, is_admin, role, user_type, dtype) VALUES ('admin', 'admin123', true, 'ROLE_ADMIN', 'ADMIN', 'Admin')"; expected "identifier"; SQL statement:
+INSERT INTO user (username, password, is_admin, role, user_type, dtype) VALUES ('admin', 'admin123', true, 'ROLE_ADMIN', 'ADMIN', 'Admin') [42001-224]

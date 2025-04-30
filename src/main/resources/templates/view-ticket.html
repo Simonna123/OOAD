@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Bus Ticket</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .ticket-container {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .ticket-header {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .ticket-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .ticket-body {
+            padding: 30px;
+            position: relative;
+        }
+
+        .ticket-info {
+            margin-bottom: 25px;
+        }
+
+        .ticket-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .booking-id {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #f8f9fa;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .ticket-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+        .qr-placeholder {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 10px;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #e1f7e1;
+            color: #0a840a;
+        }
+
+        .status-cancelled {
+            background: #ffe1e1;
+            color: #d10000;
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-container">
+        <div class="ticket-header">
+            <h1>Bus Ticket</h1>
+        </div>
+        <div class="ticket-body">
+            <div class="booking-id">Booking ID: #<span th:text="${booking.id}"></span></div>
+            
+            <div class="ticket-info">
+                <div class="ticket-row">
+                    <span class="label">Status</span>
+                    <span th:class="'status-badge ' + (${booking.status == 'ACTIVE'} ? 'status-active' : 'status-cancelled')"
+                          th:text="${booking.status}">
+                    </span>
+                </div>
+                <div class="ticket-row">
+                    <span class="label">Passenger Name</span>
+                    <span class="value" th:text="${booking.passengerName}"></span>
+                </div>
+                <div class="ticket-row">
+                    <span class="label">Bus Name</span>
+                    <span class="value" th:text="${booking.bus.busName}"></span>
+                </div>
+                <div class="ticket-row">
+                    <span class="label">From</span>
+                    <span class="value" th:text="${booking.bus.source}"></span>
+                </div>
+                <div class="ticket-row">
+                    <span class="label">To</span>
+                    <span class="value" th:text="${booking.bus.destination}"></span>
+                </div>
+                <div class="ticket-row">
+                    <span class="label">Departure</span>
+                    <span class="value" th:text="${#temporals.format(booking.bus.departureTime, 'dd MMM yyyy HH:mm')}"></span>
+                </div>
+                <div class="ticket-row">
+                    <span class="label">Arrival</span>
+                    <span class="value" th:text="${#temporals.format(booking.bus.arrivalTime, 'dd MMM yyyy HH:mm')}"></span>
+                </div>
+                <div class="ticket-row">
+                    <span class="label">Seats Booked</span>
+                    <span class="value" th:text="${booking.seatsBooked}"></span>
+                </div>
+                <div class="ticket-row">
+                    <span class="label">Total Amount</span>
+                    <span class="value">₹<span th:text="${booking.totalAmount}"></span></span>
+                </div>
+            </div>
+        </div>
+        <div class="ticket-footer">
+            <div class="qr-placeholder">QR Code</div>
+            <small>Scan this code at the bus station</small>
+            <br>
+            <a href="/passenger/dashboard" class="back-button">Back to Dashboard</a>
+        </div>
+    </div>
+</body>
+</html> 

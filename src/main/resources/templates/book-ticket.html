@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Ticket</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #e1f5fe, #fff3e0);
+            padding: 40px 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0288d1;
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+            color: #01579b;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #b3e5fc;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 18px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4fc3f7, #0288d1);
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #29b6f6, #0277bd);
+        }
+
+        #bookingMessage {
+            display: none;
+            text-align: center;
+            font-weight: bold;
+            color: green;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🚌 Book Your Bus Ticket</h1>
+
+<form th:action="@{/book-ticket}" th:object="${ticketForm}" method="post">
+    <label for="busId">Select Bus</label>
+    <select th:field="*{busId}" id="busId" required>
+        <option value="" disabled selected>Select a Bus</option>
+        <option th:each="bus : ${bus}" 
+                th:value="${bus.id}" 
+                th:text="${bus.busName + ' (' + bus.source + ' → ' + bus.destination + ')'}">
+        </option>
+    </select>
+
+    <label for="passengerName">Passenger Name</label>
+    <input type="text" th:field="*{passengerName}" id="passengerName" placeholder="Enter your name" required>
+
+    <label for="email">Email Address</label>
+    <input type="email" th:field="*{email}" id="email" placeholder="Enter your email" required>
+
+    <label for="phone">Phone Number</label>
+    <input type="text" th:field="*{phone}" id="phone" placeholder="Enter your phone number" required>
+
+    <label for="numberOfSeats">Number of Seats</label>
+    <input type="number" th:field="*{numberOfSeats}" id="numberOfSeats" placeholder="Enter number of seats" min="1" max="6" required>
+
+    <!-- Hidden input in case you are passing passengerId through the form (optional) -->
+    <input type="hidden" th:field="*{passengerId}" />
+
+    <button type="submit">🎟 Book Ticket</button>
+</form>
+
+<!-- Booking message to show after clicking submit -->
+<p id="bookingMessage">Booking your ticket, please wait...</p>
+
+<!-- JS to show message on form submission -->
+<script>
+    const form = document.querySelector('form');
+    const bookingMessage = document.getElementById('bookingMessage');
+
+    form.addEventListener('submit', function () {
+        if (bookingMessage) {
+            bookingMessage.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>

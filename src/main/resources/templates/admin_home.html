@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/admin/home" class="nav-brand">🚌 Bus Reservation Admin</a>
+            <div class="nav-links">
+                <form action="/logout" method="get" class="nav-link">
+                    <button class="btn btn-outline" type="submit">
+                        <span class="material-symbols-outlined">logout</span> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header fade-in">
+            <h1>Welcome to Admin Dashboard</h1>
+            <p>Manage your bus reservation system</p>
+        </header>
+
+        <div class="admin-cards">
+            <div class="admin-card slide-up" style="animation-delay: 0.1s">
+                <div class="card-icon">
+                    <span class="material-symbols-outlined">directions_bus</span>
+                </div>
+                <div class="card-content">
+                    <h3>Bus Management</h3>
+                    <p>Add, edit, and manage bus schedules</p>
+                    <a href="/admin/dashboard" class="btn btn-primary">
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                        Manage Buses
+                    </a>
+                </div>
+            </div>
+
+            <div class="admin-card slide-up" style="animation-delay: 0.2s">
+                <div class="card-icon">
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                </div>
+                <div class="card-content">
+                    <h3>Bookings</h3>
+                    <p>View and manage all bus bookings</p>
+                    <a href="/admin/bookings" class="btn btn-primary">
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                        View Bookings
+                    </a>
+                </div>
+            </div>
+
+            <div class="admin-card slide-up" style="animation-delay: 0.3s">
+                <div class="card-icon">
+                    <span class="material-symbols-outlined">group</span>
+                </div>
+                <div class="card-content">
+                    <h3>User Management</h3>
+                    <p>Manage system users and roles</p>
+                    <a href="/admin/users" class="btn btn-primary">
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                        Manage Users
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .admin-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .admin-card:hover {
+            transform: var(--hover-transform);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-color-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-icon .material-symbols-outlined {
+            font-size: 32px;
+            color: var(--primary-color);
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card-content h3 {
+            margin: 0;
+            color: var(--text-dark);
+            font-size: 1.25rem;
+        }
+
+        .card-content p {
+            margin: 0;
+            color: var(--text-light);
+        }
+
+        .card-content .btn {
+            margin-top: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-up {
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .admin-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>

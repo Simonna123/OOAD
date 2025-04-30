@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Buses</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- Optional styling -->
+</head>
+<body>
+
+<h2>Available Buses</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Bus Name</th>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Seats Available</th>
+            <th>Book</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="bus : ${buses}">
+            <td th:text="${bus.id}"></td>
+            <td th:text="${bus.busName}"></td>
+            <td th:text="${bus.source}"></td>
+            <td th:text="${bus.destination}"></td>
+            <td th:text="${#dates.format(bus.departureTime, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#dates.format(bus.arrivalTime, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${bus.seatsAvailable}"></td>
+            <td>
+                <form th:action="@{/api/buses/book}" method="post">
+                    <input type="hidden" name="busId" th:value="${bus.id}" />
+                    <input type="number" name="seatsToBook" min="1" max="10" required />
+                    <button type="submit">Book</button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

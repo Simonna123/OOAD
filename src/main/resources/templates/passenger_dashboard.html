@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Passenger Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/passenger/dashboard" class="nav-brand">🚌 Bus Reservation</a>
+            <div class="nav-links">
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <span class="material-symbols-outlined">logout</span> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header fade-in">
+            <h1>Welcome to Your Dashboard</h1>
+            <p>Manage your bus bookings and travel plans</p>
+        </header>
+
+        <div class="grid">
+            <div class="card slide-up" style="--delay: 0.1s">
+                <h2>Quick Actions</h2>
+                <div class="action-grid">
+                    <a th:href="@{/passenger/view-buses}" class="action-card">
+                        <span class="material-symbols-outlined">directions_bus</span>
+                        <span>Book Bus</span>
+                    </a>
+                    <a th:href="@{/passenger/bookings}" class="action-card">
+                        <span class="material-symbols-outlined">list_alt</span>
+                        <span>View All Bookings</span>
+                    </a>
+                    <a th:href="@{/passenger/cancel-booking}" class="action-card">
+                        <span class="material-symbols-outlined">cancel</span>
+                        <span>Cancel Booking</span>
+                    </a>
+                    <a th:href="@{/passenger/view-ticket}" class="action-card">
+                        <span class="material-symbols-outlined">confirmation_number</span>
+                        <span>View Latest Ticket</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card slide-up" style="--delay: 0.2s">
+                <h2>Active Bookings</h2>
+                <div th:if="${activeBookings.empty}" class="empty-state">
+                    <span class="material-symbols-outlined">event_busy</span>
+                    <p>No active bookings found</p>
+                </div>
+                <div th:unless="${activeBookings.empty}" class="booking-list">
+                    <div th:each="booking : ${activeBookings}" class="booking-card">
+                        <div class="booking-header">
+                            <h3 th:text="${booking.bus.busName}">Bus Name</h3>
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                        <div class="booking-details">
+                            <div class="detail-item">
+                                <span class="material-symbols-outlined">location_on</span>
+                                <span th:text="${booking.bus.source + ' → ' + booking.bus.destination}">Route</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="material-symbols-outlined">event</span>
+                                <span th:text="${#temporals.format(booking.bus.departureTime, 'dd MMM yyyy HH:mm')}">Date</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="material-symbols-outlined">chair</span>
+                                <span th:text="${'Seat(s): ' + booking.seatNumbers}">Seats</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            border: 2px solid #e1e1e1;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: var(--card-shadow);
+        }
+
+        .action-card .material-symbols-outlined {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state .material-symbols-outlined {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .booking-header h3 {
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .detail-item .material-symbols-outlined {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .slide-up {
+            animation: slideUp 0.5s ease-out forwards;
+            animation-delay: var(--delay, 0s);
+            opacity: 0;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard - Bus Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/admin/home" class="nav-brand">🚌 Bus Reservation Admin</a>
+            <div class="nav-links">
+                <a href="/admin/users" class="nav-link">
+                    <span class="material-symbols-outlined">group</span> Users
+                </a>
+                <a href="/admin/bookings" class="nav-link">
+                    <span class="material-symbols-outlined">confirmation_number</span> Bookings
+                </a>
+                <form action="/logout" method="get" class="nav-link">
+                    <button class="btn btn-outline" type="submit">
+                        <span class="material-symbols-outlined">logout</span> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header fade-in">
+            <h1>Bus Management</h1>
+            <p>Manage your bus fleet and schedules</p>
+        </header>
+
+        <div class="admin-actions slide-up">
+            <button class="btn btn-primary" onclick="toggleForm()">
+                <span class="material-symbols-outlined">add_circle</span>
+                Add New Bus
+            </button>
+        </div>
+
+        <div class="form-card slide-up" id="addBusForm" style="display: none;">
+            <div class="form-header">
+                <h2>Add New Bus</h2>
+                <button class="btn btn-icon" onclick="toggleForm()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <form th:action="@{/admin/add}" method="post" th:object="${bus}" class="grid-form">
+                <div class="form-group">
+                    <label>Bus Name</label>
+                    <input type="text" th:field="*{busName}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Source</label>
+                    <input type="text" th:field="*{source}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Destination</label>
+                    <input type="text" th:field="*{destination}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Departure Time</label>
+                    <input type="datetime-local" th:field="*{departureTime}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Arrival Time</label>
+                    <input type="datetime-local" th:field="*{arrivalTime}" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label>Available Seats</label>
+                    <input type="number" th:field="*{seatsAvailable}" class="form-control" min="1" required />
+                </div>
+                <div class="form-group">
+                    <label>Fare (₹)</label>
+                    <input type="number" th:field="*{fare}" class="form-control" min="0" step="0.01" required />
+                </div>
+                <div class="form-group">
+                    <label>Bus Type</label>
+                    <input type="text" th:field="*{busType}" class="form-control" required />
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        Add Bus
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card slide-up">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Bus Name</th>
+                            <th>Route</th>
+                            <th>Schedule</th>
+                            <th>Seats</th>
+                            <th>Type</th>
+                            <th>Fare</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="bus : ${buses}">
+                            <td th:text="${bus.busName}">Bus Name</td>
+                            <td>
+                                <div class="route-info">
+                                    <span th:text="${bus.source}">Source</span>
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                    <span th:text="${bus.destination}">Destination</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="schedule-info">
+                                    <div>
+                                        <span class="material-symbols-outlined">schedule</span>
+                                        <span th:text="${#temporals.format(bus.departureTime, 'HH:mm')}">Departure</span>
+                                    </div>
+                                    <div class="date" th:text="${#temporals.format(bus.departureTime, 'dd MMM yyyy')}">Date</div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge" th:classappend="${bus.seatsAvailable > 10 ? 'badge-success' : 'badge-warning'}"
+                                      th:text="${bus.seatsAvailable + ' seats'}">Seats</span>
+                            </td>
+                            <td>
+                                <span class="badge badge-info" th:text="${bus.busType}">Type</span>
+                            </td>
+                            <td>
+                                <span class="fare" th:text="${'₹' + bus.fare}">Fare</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a th:href="@{'/admin/edit/' + ${bus.id}}" class="btn btn-icon btn-warning">
+                                        <span class="material-symbols-outlined">edit</span>
+                                    </a>
+                                    <a th:href="@{'/admin/delete/' + ${bus.id}}" 
+                                       onclick="return confirm('Are you sure you want to delete this bus? This action cannot be undone.')"
+                                       class="btn btn-icon btn-danger">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div th:if="${param.success}" class="alert alert-success slide-up">
+            <span class="material-symbols-outlined">check_circle</span>
+            <span th:text="${param.success}">Success message</span>
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger slide-up">
+            <span class="material-symbols-outlined">error</span>
+            <span th:text="${param.error}">Error message</span>
+        </div>
+    </div>
+
+    <style>
+        .admin-actions {
+            margin-bottom: 2rem;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .grid-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .route-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .schedule-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .schedule-info > div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .date {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .fare {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 0 -1.5rem;
+            padding: 0 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script>
+        function toggleForm() {
+            const form = document.getElementById("addBusForm");
+            form.style.display = form.style.display === "none" ? "block" : "none";
+        }
+
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.style.display = 'none', 500);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

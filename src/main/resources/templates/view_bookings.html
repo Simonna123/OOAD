@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Bookings</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/passenger/dashboard" class="nav-brand">🚌 Bus Reservation</a>
+            <div class="nav-links">
+                <a href="/passenger/dashboard" class="nav-link">
+                    <span class="material-symbols-outlined">dashboard</span> Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header fade-in">
+            <h1>My Bookings</h1>
+            <p>View and manage all your bus bookings</p>
+        </header>
+
+        <div class="search-container slide-up">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search by bus name, source, or destination...">
+        </div>
+
+        <div class="bookings-grid" th:if="${not #lists.isEmpty(bookings)}">
+            <div th:each="booking : ${bookings}" class="booking-card slide-up" 
+                th:attr="data-bus-name=${booking.bus.busName}, 
+                        data-source=${booking.bus.source}, 
+                        data-destination=${booking.bus.destination}">
+                <div class="booking-header">
+                    <h3 th:text="${booking.bus.busName}">Bus Name</h3>
+                    <span th:class="${'badge ' + (booking.status == 'ACTIVE' ? 'badge-success' : 'badge-danger')}"
+                          th:text="${booking.status}">Status</span>
+                </div>
+
+                <div class="booking-route">
+                    <div class="route-point">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <span th:text="${booking.bus.source}">Source</span>
+                    </div>
+                    <div class="route-line"></div>
+                    <div class="route-point">
+                        <span class="material-symbols-outlined">flag</span>
+                        <span th:text="${booking.bus.destination}">Destination</span>
+                    </div>
+                </div>
+
+                <div class="booking-details">
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">person</span>
+                        <span th:text="${booking.passengerName}">Passenger Name</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">schedule</span>
+                        <span th:text="${#temporals.format(booking.bus.departureTime, 'dd MMM yyyy HH:mm')}">Departure</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">chair</span>
+                        <span th:text="${'Seat(s): ' + booking.seatNumbers}">Seats</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">payments</span>
+                        <span th:text="${'₹' + booking.totalAmount}">Amount</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">event</span>
+                        <span th:text="${#temporals.format(booking.bookingTime, 'dd MMM yyyy HH:mm')}">Booking Time</span>
+                    </div>
+                </div>
+
+                <div class="booking-actions" th:if="${booking.status == 'ACTIVE'}">
+                    <form th:action="@{/passenger/bookings/cancel/{id}(id=${booking.id})}" method="post" 
+                          onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                        <button type="submit" class="btn btn-danger">
+                            <span class="material-symbols-outlined">cancel</span>
+                            Cancel Booking
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(bookings)}" class="empty-state slide-up">
+            <span class="material-symbols-outlined">event_busy</span>
+            <p>No bookings found</p>
+            <a href="/passenger/view-buses" class="btn btn-primary">
+                <span class="material-symbols-outlined">directions_bus</span>
+                Book a Bus
+            </a>
+        </div>
+
+        <div id="noResults" class="empty-state" style="display: none;">
+            <span class="material-symbols-outlined">search_off</span>
+            <p>No bookings found matching your search</p>
+        </div>
+    </div>
+
+    <style>
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .booking-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .booking-card:hover {
+            transform: var(--hover-transform);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .booking-header h3 {
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .booking-route {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .route-point {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dark);
+            flex: 1;
+        }
+
+        .route-line {
+            flex: 2;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            margin: 0 1rem;
+            position: relative;
+        }
+
+        .route-line::after {
+            content: '→';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-color);
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .detail-item .material-symbols-outlined {
+            color: var(--primary-color);
+        }
+
+        .booking-actions {
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            text-align: right;
+        }
+
+        .search-container {
+            margin-bottom: 2rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            margin: 2rem 0;
+        }
+
+        .empty-state .material-symbols-outlined {
+            font-size: 3rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state .btn {
+            margin-top: 1rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-up {
+            animation: slideIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+    </style>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const bookingCards = document.querySelectorAll('.booking-card');
+            let hasResults = false;
+
+            bookingCards.forEach(card => {
+                const busName = card.getAttribute('data-bus-name').toLowerCase();
+                const source = card.getAttribute('data-source').toLowerCase();
+                const destination = card.getAttribute('data-destination').toLowerCase();
+
+                if (busName.includes(searchTerm) || 
+                    source.includes(searchTerm) || 
+                    destination.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('noResults').style.display = hasResults ? 'none' : 'block';
+        });
+    </script>
+</body>
+</html> 

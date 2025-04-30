@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Bus</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/admin/home" class="nav-brand">🚌 Bus Reservation Admin</a>
+            <div class="nav-links">
+                <a href="/admin/dashboard" class="nav-link">
+                    <span class="material-symbols-outlined">dashboard</span> Dashboard
+                </a>
+                <a href="/admin/users" class="nav-link">
+                    <span class="material-symbols-outlined">group</span> Users
+                </a>
+                <a href="/admin/bookings" class="nav-link">
+                    <span class="material-symbols-outlined">confirmation_number</span> Bookings
+                </a>
+                <form action="/logout" method="get" class="nav-link">
+                    <button class="btn btn-outline" type="submit">
+                        <span class="material-symbols-outlined">logout</span> Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header fade-in">
+            <h1>Edit Bus Details</h1>
+            <p>Update information for this bus</p>
+        </header>
+
+        <div class="form-card slide-up">
+            <form th:action="@{/admin/edit/{id}(id=${bus.id})}" method="post" th:object="${bus}" class="grid-form">
+                <div class="form-group">
+                    <label>Bus Name</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">directions_bus</span>
+                        <input type="text" th:field="*{busName}" class="form-control" required />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Source</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">location_on</span>
+                        <input type="text" th:field="*{source}" class="form-control" required />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Destination</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">flag</span>
+                        <input type="text" th:field="*{destination}" class="form-control" required />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Departure Time</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">schedule</span>
+                        <input type="datetime-local" th:field="*{departureTime}" class="form-control" required />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Arrival Time</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">schedule</span>
+                        <input type="datetime-local" th:field="*{arrivalTime}" class="form-control" required />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Available Seats</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">chair</span>
+                        <input type="number" th:field="*{seatsAvailable}" class="form-control" min="0" required />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Fare (₹)</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">payments</span>
+                        <input type="number" th:field="*{fare}" class="form-control" min="0" step="0.01" required />
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Bus Type</label>
+                    <div class="input-group">
+                        <span class="material-symbols-outlined">category</span>
+                        <input type="text" th:field="*{busType}" class="form-control" required />
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/admin/dashboard" class="btn btn-outline">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <span class="material-symbols-outlined">save</span>
+                        Update Bus
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${param.success}" class="alert alert-success slide-up">
+            <span class="material-symbols-outlined">check_circle</span>
+            <span th:text="${param.success}">Success message</span>
+        </div>
+        <div th:if="${param.error}" class="alert alert-danger slide-up">
+            <span class="material-symbols-outlined">error</span>
+            <span th:text="${param.error}">Error message</span>
+        </div>
+    </div>
+
+    <style>
+        .form-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            margin: 2rem 0;
+        }
+
+        .grid-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-light);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-group .material-symbols-outlined {
+            color: var(--text-light);
+        }
+
+        .input-group .form-control {
+            border: none;
+            background: none;
+            padding: 0.5rem;
+            width: 100%;
+        }
+
+        .input-group:focus-within {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px var(--primary-color-light);
+        }
+
+        .input-group:focus-within .material-symbols-outlined {
+            color: var(--primary-color);
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .grid-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script>
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.style.display = 'none', 500);
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
