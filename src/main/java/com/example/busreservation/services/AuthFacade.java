@@ -1,6 +1,7 @@
 package com.example.busreservation.services;
 
 import com.example.busreservation.models.User;
+import com.example.busreservation.models.Passenger;
 import com.example.busreservation.repositories.UserRepository;
 
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,12 +32,7 @@ public class AuthFacade {
         if (userRepository.existsByUsername(username)) {
             throw new RuntimeException("Username already exists");
         }
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-        // ← use the correct setter for your boolean field:
-        // if your entity field is named "admin", this setter should exist.
-        user.setAdmin(false);
+        Passenger user = new Passenger(username, passwordEncoder.encode(password));
         return userRepository.save(user);
     }
 
