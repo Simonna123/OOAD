@@ -1,6 +1,7 @@
 package com.example.busreservation.services;
 
 import com.example.busreservation.models.User;
+import com.example.busreservation.models.Passenger;
 import com.example.busreservation.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,11 +39,7 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Username already exists");
         }
 
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        newUser.setAdmin(false);
-
+        Passenger newUser = new Passenger(username, password);
         return userRepository.save(newUser);
     }
 
